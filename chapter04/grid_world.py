@@ -76,10 +76,11 @@ def compute_state_value(in_place=True, discount=1.0):
         for i in range(WORLD_SIZE):
             for j in range(WORLD_SIZE):
                 value = 0
+                values = []
                 for action in ACTIONS:
                     (next_i, next_j), reward = step([i, j], action)
-                    value += ACTION_PROB * (reward + discount * state_values[next_i, next_j])
-                new_state_values[i, j] = value
+                    values.append(ACTION_PROB * (reward + discount * state_values[next_i, next_j]))
+                new_state_values[i, j] = max(values)
 
         max_delta_value = abs(old_state_values - new_state_values).max()
         if max_delta_value < 1e-4:
@@ -99,7 +100,7 @@ def figure_4_1():
     print('In-place: {} iterations'.format(asycn_iteration))
     print('Synchronous: {} iterations'.format(sync_iteration))
 
-    plt.savefig('../images/figure_4_1.png')
+    plt.savefig('images/figure_4_1.png')
     plt.close()
 
 
